@@ -1,0 +1,11 @@
+doc_id: 'SQR-001'
+doc_title: 'GitLFS Architecture Note'
+copyright: '2015, AURA/LSST'
+authors:
+    - 'Frossie Economou'
+    - 'J Matt Peterson'
+    - 'Joshua Hoblitt'
+# Current document version
+last_revised: 'November 04, 2015'
+version: '1.0'
+# dev_version_suffix: None  # e.g. 'alpha'/'beta'/'rc' if necessary
