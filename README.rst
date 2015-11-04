@@ -6,7 +6,6 @@ GitLFS service implementation. For actual documentation on deployment,
 as well as the source code involved in standing up this service,
 consult the repositories.
 
-
 Motivation
 ----------
 
@@ -18,13 +17,13 @@ have been a number of services to deal with this, such as git-annex
 and git-fat, but in terms of workflow, storing files in those back
 ends was too much of a departure from what seems like "normal"
 workflow for users. Lacking a satisfactory option, the core package
-afwdata was left on the ingouse gitolite server after the rest of the
-codebase migrated to Github. 
+afwdata was left on the inhouse gitolite server after the rest of the
+codebase migrated to GitHub. 
 
-In 2015, Github released a protocol and an open source referebce
+In 2015, GitHub released a protocol and an open source reference
 implementation of GitLFS, a specification for dealing with large
-binary files in git. Aside from some upfront setup pain, the worflow
-was very close to "normal" Github flow. Github also released a paid
+binary files in git. Aside from some upfront setup pain, the workflow
+was very close to "normal" GitHub flow. GitHub also released a paid
 hosted service for those files. Given the demand for storing data in
 our repositories, the cost would be non-trivial. More, we did not wish
 to get in a position where developers are self-censoring over what to
@@ -33,7 +32,7 @@ store.
 Following a successful RFC, we decided to proceed with a GitLFS
 service backed by our developer infrastructure OpenStack resources at
 NCSA's Nebula cluster. This would give users the advantages of working
-predominantly with the Github services, while allowing us to offer
+predominantly with the GitHub services, while allowing us to offer
 umetered storage at the back end. 
 
 Challenges
@@ -62,12 +61,13 @@ Architecture
    :alt: GitLFS Architecture Diagram
 
 After installing the gitLFS client, a user who having cloned and
-modified now pushes their GitLFSrepo is in fact generating two
+modified now pushes their GitLFS repo is in fact generating two
 requests when pushing a file specified in a repo's .gitattributes as
-being tracked. The first one goes to the Github server and contains a
+being tracked. The first one goes to the GitHub server and contains a
 JSON packet that looks something like this:
 
 .. code-block:: json
+
    version https://git-lfs.github.com/spec/v1
    oid sha256:7a6943ac4d8337727b93f410cf51b1ce748dabe9dc8e85c8942c97dd5c0a49e9
    size 123840
@@ -75,19 +75,19 @@ JSON packet that looks something like this:
 The second one is intercepted by the gitLFS client (due to the smudge
 and clean filters set up) and uses the .gitconfig to locare the
 location of the gitLFS server it should be addressing. In our case
-that is git-lfs.lsst.codes. The gitLFS server queries the Github API
+that is git-lfs.lsst.codes. The gitLFS server queries the GitHub API
 to ensure the user has org permissions (we can't let anyone on the
 open Internet push to our server!). It checks that the requested blob
 exists in the backing store, and hands the client a URL that it can
 use to retrieve it. The client then fetches the URL to retrieve it
 from our object store.
 
-Other git-lfs.lsst.codes components
+Other git-lfs.lsst.codes components:
 
-- Passenger is used to run the git-lfs-s3-server ruby gem
-- Nginx is used for SSL termination.
-- Redis is used for credential caching.
-- s3s3 is our backup service backing onto AWS S3
+- Passenger is used to run the git-lfs-s3-server ruby gem,
+- Nginx is used for SSL termination,
+- Redis is used for credential caching,
+- s3s3 is our backup service backing onto AWS S3.
 
 The object store components are:
 
@@ -100,7 +100,6 @@ The object store components are:
 
 All lsst.codes instances (in green in the diagram) are deployed on the
 Nebula cluster at NCSA.
-		 
 
 Repositories
 ------------
@@ -111,7 +110,6 @@ These are the repos involved in this deployment:
 
   This is the server implementation. It also contains the deploy
   instructions. 
-
 
 - `s3s3 <https://github.com/lsst-sqre/s3s3>`_
 
@@ -141,6 +139,6 @@ Documentation
 RFCs
 ----
 
-- `RFC-104 <https://jira.lsstcorp.org/browse/RFC-104>`
+- `RFC-104 <https://jira.lsstcorp.org/browse/RFC-104>`_
 
-  This is the RFC proposing GitLFS adoption
+  This is the RFC proposing GitLFS adoption.
