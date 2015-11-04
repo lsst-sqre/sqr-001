@@ -2,7 +2,7 @@
 =============================
 
 This is a SQuaRE Technical Note describing the architecture of the
-`Git LFS <https://git-lfs.github.com/>` service implementation. For actual documentation on deployment,
+`Git LFS <https://git-lfs.github.com/>`_ service implementation. For actual documentation on deployment,
 as well as the source code involved in standing up this service,
 consult the repositories.
 
