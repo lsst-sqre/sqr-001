@@ -1,8 +1,8 @@
-001: GitLFS Architecture Note
+001: Git LFS Architecture Note
 =============================
 
 This is a SQuaRE Technical Note describing the architecture of the
-GitLFS service implementation. For actual documentation on deployment,
+`Git LFS <https://git-lfs.github.com/>` service implementation. For actual documentation on deployment,
 as well as the source code involved in standing up this service,
 consult the repositories.
 
@@ -21,7 +21,7 @@ afwdata was left on the inhouse gitolite server after the rest of the
 codebase migrated to GitHub. 
 
 In 2015, GitHub released a protocol and an open source reference
-implementation of GitLFS, a specification for dealing with large
+implementation of Git LFS, a specification for dealing with large
 binary files in git. Aside from some upfront setup pain, the workflow
 was very close to "normal" GitHub flow. GitHub also released a paid
 hosted service for those files. Given the demand for storing data in
@@ -29,7 +29,7 @@ our repositories, the cost would be non-trivial. More, we did not wish
 to get in a position where developers are self-censoring over what to
 store.
 
-Following a successful RFC, we decided to proceed with a GitLFS
+Following a successful RFC, we decided to proceed with a Git LFS
 service backed by our developer infrastructure OpenStack resources at
 NCSA's Nebula cluster. This would give users the advantages of working
 predominantly with the GitHub services, while allowing us to offer
@@ -40,7 +40,7 @@ Challenges
 
 There were a number of challenges to overcome.
 
-- As early GitLFS adopters, we encountered non-trivial bugs. Developer
+- As early Git LFS adopters, we encountered non-trivial bugs. Developer
   response was excellent, but we did have to delay deployment waiting
   for a fixed client for a better user experience.
 
@@ -58,10 +58,10 @@ Architecture
 ------------
 
 .. image:: https://github.com/lsst-sqre/technote-001/blob/master/gitlfs.png
-   :alt: GitLFS Architecture Diagram
+   :alt: Git LFS Architecture Diagram
 
 After installing the gitLFS client, a user who having cloned and
-modified now pushes their GitLFS repo is in fact generating two
+modified now pushes their Git LFS repo is in fact generating two
 requests when pushing a file specified in a repo's .gitattributes as
 being tracked. The first one goes to the GitHub server and contains a
 JSON packet that looks something like this:
@@ -141,4 +141,4 @@ RFCs
 
 - `RFC-104 <https://jira.lsstcorp.org/browse/RFC-104>`_
 
-  This is the RFC proposing GitLFS adoption.
+  This is the RFC proposing Git LFS adoption.
