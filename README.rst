@@ -1,5 +1,5 @@
-001: Git LFS Architecture Note
-=============================
+SQR-001: GitLFS Architecture Note
+=================================
 
 This is a SQuaRE Technical Note describing the architecture of the
 `Git LFS <https://git-lfs.github.com/>`_ service implementation. For actual documentation on deployment,
@@ -57,8 +57,8 @@ There were a number of challenges to overcome.
 Architecture
 ------------
 
-.. image:: https://github.com/lsst-sqre/technote-001/blob/master/gitlfs.png
-   :alt: Git LFS Architecture Diagram
+.. image:: _static/gitlfs.png
+   :alt: GitLFS Architecture Diagram
 
 After installing the gitLFS client, a user who having cloned and
 modified now pushes their Git LFS repo is in fact generating two
