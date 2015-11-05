@@ -10,27 +10,34 @@ Astronomical software code repositories often contain data for test or
 demo purposes. These large binary files don't tend to benefit from
 version control beyond provenance and update tracking, and their
 history expands repository size with no return. Historically there
-have been a number of services to deal with this, such as git-annex
-and git-fat, but in terms of workflow, storing files in those back
+have been a number of services to deal with this, such as `git-annex`_
+and `git-fat`_, but in terms of workflow, storing files in those back
 ends was too much of a departure from what seems like "normal"
 workflow for users. Lacking a satisfactory option, the core package
-afwdata was left on the inhouse gitolite server after the rest of the
+`afwdata`_ was left on the inhouse gitolite server after the rest of the
 codebase migrated to GitHub. 
 
-In 2015, GitHub released a protocol and an open source reference
-implementation of Git LFS, a specification for dealing with large
-binary files in git. Aside from some upfront setup pain, the workflow
-was very close to "normal" GitHub flow. GitHub also released a paid
-hosted service for those files. Given the demand for storing data in
-our repositories, the cost would be non-trivial. More, we did not wish
-to get in a position where developers are self-censoring over what to
-store.
+.. _git-annex: http://www.git-annex.org
+.. _git-fat: https://github.com/jedbrown/git-fat
+.. _afwdata: https://github.com/lsst/afwdata
 
-Following a successful RFC, we decided to proceed with a Git LFS
-service backed by our developer infrastructure OpenStack resources at
-NCSA's Nebula cluster. This would give users the advantages of working
-predominantly with the GitHub services, while allowing us to offer
-umetered storage at the back end. 
+In 2015, `GitHub released a protocol and an open source reference
+implementation of Git LFS <https://git-lfs.github.com>`_, a
+specification for dealing with large binary files in git. Aside from
+some upfront setup pain, the workflow was very close to "normal" GitHub
+flow. GitHub also released a paid hosted service for those files. Given
+the demand for storing data in our repositories, the cost would be
+non-trivial. More, we did not wish to get in a position where developers
+are self-censoring over what to store.
+
+Following `a successful RFC
+<https://jira.lsstcorp.org/browse/RFC-104>`_, we decided to proceed with
+a Git LFS service backed by our developer infrastructure `OpenStack`_
+resources at NCSA's Nebula cluster. This would give users the advantages
+of working predominantly with the GitHub services, while allowing us to
+offer umetered storage at the back end. 
+
+.. _OpenStack: http://www.openstack.org
 
 Challenges
 ==========
@@ -42,14 +49,18 @@ There were a number of challenges to overcome.
   for a fixed client for a better user experience.
 
 - At the time, the Nebula cluster did not provide an object store, so
-  we built our own with Ceph.
+  we built our own with `Ceph`_.
 
 - There was also no disaster recovery backup service available, so we
-  built our own backed by AWS S3 (we may move to Glacier if volumes
-  get high).
+  built our own backed by `AWS S3`_ (we may move to `Glacier`_ if
+  volumes get high).
 
 - The S3 protocol implementation we used to back our server lacked
   Ceph support.
+
+.. _Ceph: http://ceph.com
+.. _AWS S3: https://aws.amazon.com/s3/
+.. _Glacier: https://jira.lsstcorp.org/browse/RFC-10://aws.amazon.com/glacier/ 
 
 Architecture
 ============
@@ -57,11 +68,11 @@ Architecture
 .. image:: _static/gitlfs.png
    :alt: GitLFS Architecture Diagram
 
-After installing the gitLFS client, a user who having cloned and
-modified now pushes their Git LFS repo is in fact generating two
-requests when pushing a file specified in a repo's .gitattributes as
-being tracked. The first one goes to the GitHub server and contains a
-JSON packet that looks something like this:
+After `installing <https://git-lfs.github.com>`_ the ``git lfs`` client,
+a user who having cloned and modified now pushes their Git LFS repo is
+in fact generating two requests when pushing a file specified in a
+repo's ``.gitattributes`` as being tracked. The first one goes to the
+GitHub server and contains a JSON packet that looks something like this:
 
 .. code-block:: json
 
@@ -69,33 +80,37 @@ JSON packet that looks something like this:
    oid sha256:7a6943ac4d8337727b93f410cf51b1ce748dabe9dc8e85c8942c97dd5c0a49e9
    size 123840
 
-The second one is intercepted by the gitLFS client (due to the smudge
-and clean filters set up) and uses the .gitconfig to locare the
-location of the gitLFS server it should be addressing. In our case
-that is git-lfs.lsst.codes. The gitLFS server queries the GitHub API
-to ensure the user has org permissions (we can't let anyone on the
-open Internet push to our server!). It checks that the requested blob
-exists in the backing store, and hands the client a URL that it can
-use to retrieve it. The client then fetches the URL to retrieve it
-from our object store.
+The second one is intercepted by the ``git lfs`` client (due to the
+smudge and clean filters set up) and uses the ``.gitconfig`` to locate
+the ``git lfs`` server it should be addressing. In our case that is
+``git-lfs.lsst.codes``. The ``git lfs`` server queries the GitHub API to
+ensure the user has ``org`` permissions (we can't let anyone on the open
+Internet push to our server!). It checks that the requested blob exists
+in the backing store, and hands the client a URL that it can use to
+retrieve it. The client then fetches the URL to retrieve it from our
+object store.
 
-Other git-lfs.lsst.codes components:
+Other ``git-lfs.lsst.codes`` components:
 
-- Passenger is used to run the git-lfs-s3-server ruby gem,
-- Nginx is used for SSL termination,
-- Redis is used for credential caching,
-- s3s3 is our backup service backing onto AWS S3.
+- `Passenger <https://www.phusionpassenger.com>`_ is used to run the
+  ``git-lfs-s3-server`` ruby gem,
+- `Nginx <http://nginx.org>`_ is used for SSL termination,
+- `Redis <http://redis.io>`_ is used for credential caching,
+- `s3s3 <https://github.com/lsst-sqre/s3s3>`_ is our backup service
+  backing onto AWS S3.
 
 The object store components are:
 
-- the s3.lsst.codes head node, that provides the radosgw REST API
-  server for Ceph.
+- The ``s3.lsst.codes`` head node, that provides the `radosgw
+  <http://docs.ceph.com/docs/master/man/8/radosgw/>`_ REST API server
+  for Ceph.
 
-- Our Ceph instance (speaking the S3 protocol, can be switched to
-  Swift when that is available) that uses a 3-node (the quorum
-  required by Ceph) configuration on ceph[0,1,2].lsst.codes.
+- Our Ceph instance (speaking the S3 protocol, can be switched to `Swift
+  <http://www.openstack.org/software/releases/kilo/components/swift>`_
+  when that is available) that uses a 3-node (the quorum required by
+  Ceph) configuration on ``ceph[0,1,2].lsst.codes``.
 
-All lsst.codes instances (in green in the diagram) are deployed on the
+All ``lsst.codes`` instances (in green in the diagram) are deployed on the
 Nebula cluster at NCSA.
 
 Repositories
