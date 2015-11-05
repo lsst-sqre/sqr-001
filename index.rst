@@ -1,7 +1,7 @@
 This is a SQuaRE Technical Note describing the architecture of the `Git
 LFS <https://git-lfs.github.com/>`_ service implementation. For actual
 documentation on deployment, as well as the source code involved in
-standing up this service, consult the repositories.
+standing up this service, consult the :ref:`repositories <repos>`.
 
 Motivation
 ==========
@@ -14,7 +14,7 @@ have been a number of services to deal with this, such as `git-annex`_
 and `git-fat`_, but in terms of workflow, storing files in those back
 ends was too much of a departure from what seems like "normal"
 workflow for users. Lacking a satisfactory option, the core package
-`afwdata`_ was left on the inhouse gitolite server after the rest of the
+`afwdata`_ was left on the in-house gitolite server after the rest of the
 codebase migrated to GitHub. 
 
 .. _git-annex: http://www.git-annex.org
@@ -35,7 +35,7 @@ Following `a successful RFC
 a Git LFS service backed by our developer infrastructure `OpenStack`_
 resources at NCSA's Nebula cluster. This would give users the advantages
 of working predominantly with the GitHub services, while allowing us to
-offer umetered storage at the back end. 
+offer unmetered storage at the back end. 
 
 .. _OpenStack: http://www.openstack.org
 
@@ -60,7 +60,7 @@ There were a number of challenges to overcome.
 
 .. _Ceph: http://ceph.com
 .. _AWS S3: https://aws.amazon.com/s3/
-.. _Glacier: https://jira.lsstcorp.org/browse/RFC-10://aws.amazon.com/glacier/ 
+.. _Glacier: https://aws.amazon.com/glacier/ 
 
 Architecture
 ============
@@ -82,8 +82,8 @@ GitHub server and contains a JSON packet that looks something like this:
 
 The second one is intercepted by the ``git lfs`` client (due to the
 smudge and clean filters set up) and uses the ``.gitconfig`` to locate
-the ``git lfs`` server it should be addressing. In our case that is
-``git-lfs.lsst.codes``. The ``git lfs`` server queries the GitHub API to
+the Git LFS server it should be addressing. In our case that is
+``git-lfs.lsst.codes``. The Git LFS server queries the GitHub API to
 ensure the user has ``org`` permissions (we can't let anyone on the open
 Internet push to our server!). It checks that the requested blob exists
 in the backing store, and hands the client a URL that it can use to
@@ -113,6 +113,8 @@ The object store components are:
 All ``lsst.codes`` instances (in green in the diagram) are deployed on the
 Nebula cluster at NCSA.
 
+.. _repos:
+
 Repositories
 ============
 
@@ -134,6 +136,8 @@ These are the repos involved in this deployment:
   public repos (it only worked for private repos). We are working on
   upstreaming those changes, and when this is done, the private fork
   will be removed.
+
+.. _docs:
 
 Documentation
 =============
