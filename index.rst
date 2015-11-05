@@ -69,10 +69,12 @@ Architecture
    :alt: GitLFS Architecture Diagram
 
 After `installing <https://git-lfs.github.com>`_ the ``git lfs`` client,
-a user who having cloned and modified now pushes their Git LFS repo is
-in fact generating two requests when pushing a file specified in a
-repo's ``.gitattributes`` as being tracked. The first one goes to the
-GitHub server and contains a JSON packet that looks something like this:
+a user can commit additions and modifications to LFS-backed data using
+the normal ``git`` commands. The repo's ``.gitattributes`` specifies
+what files are tracked by Git LFS. When the user pushes commits with
+LFS-tracked data, they are in fact generating two requests. The first
+one goes to the GitHub server and contains a JSON packet that looks
+something like this:
 
 .. code-block:: json
 
