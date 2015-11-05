@@ -1,5 +1,4 @@
-This is a SQuaRE Technical Note describing the architecture of the `Git
-LFS <https://git-lfs.github.com/>`_ service implementation. For actual
+This is a SQuaRE Technical Note describing the architecture of the `Git LFS <https://git-lfs.github.com/>`_ service implementation. For actual
 documentation on deployment, as well as the source code involved in
 standing up this service, consult the :ref:`repositories <repos>`.
 
@@ -55,8 +54,8 @@ There were a number of challenges to overcome.
   built our own backed by `AWS S3`_ (we may move to `Glacier`_ if
   volumes get high).
 
-- The S3 protocol implementation we used to back our server lacked
-  Ceph support.
+- The Ceph S3 implementation lacked some features required by our
+  git-lfs server.
 
 .. _Ceph: http://ceph.com
 .. _AWS S3: https://aws.amazon.com/s3/
@@ -73,24 +72,25 @@ a user can commit additions and modifications to LFS-backed data using
 the normal ``git`` commands. The repo's ``.gitattributes`` specifies
 what files are tracked by Git LFS. When the user pushes commits with
 LFS-tracked data, they are in fact generating two requests. The first
-one goes to the GitHub server and contains a JSON packet that looks
-something like this:
+one goes to the Git server containing the Git LFS pointer for the
+file. It looks something like this:
 
-.. code-block:: json
+.. code-block::
 
    version https://git-lfs.github.com/spec/v1
    oid sha256:7a6943ac4d8337727b93f410cf51b1ce748dabe9dc8e85c8942c97dd5c0a49e9
    size 123840
 
-The second one is intercepted by the ``git lfs`` client (due to the
-smudge and clean filters set up) and uses the ``.gitconfig`` to locate
+The second request is made by the ``git lfs`` client (due to the
+smudge and clean filters) and uses the ``.gitconfig`` to locate
 the Git LFS server it should be addressing. In our case that is
-``git-lfs.lsst.codes``. The Git LFS server queries the GitHub API to
-ensure the user has ``org`` permissions (we can't let anyone on the open
-Internet push to our server!). It checks that the requested blob exists
-in the backing store, and hands the client a URL that it can use to
-retrieve it. The client then fetches the URL to retrieve it from our
-object store.
+``git-lfs.lsst.codes``. The Git LFS server checks whether the requested
+blob exists in the backing store, and hands the client a URL that it
+can use to retrive or push it. If the request requires authentication
+and authorization then the Git LFS server queries the GitHub API to
+ensure the user is an `LSST org member <https://github.com/lsst>`_ (we
+can't let anyone on the open Internet push to our server!). The client
+then uses the URL to fetch or push to our object store.
 
 Other ``git-lfs.lsst.codes`` components:
 
