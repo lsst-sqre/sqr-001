@@ -54,8 +54,8 @@ There were a number of challenges to overcome.
   built our own backed by `AWS S3`_ (we may move to `Glacier`_ if
   volumes get high).
 
-- The S3 protocol implementation we used to back our server lacked
-  Ceph support.
+- The Ceph S3 implementation lacked some features required by our
+  git-lfs server.
 
 .. _Ceph: http://ceph.com
 .. _AWS S3: https://aws.amazon.com/s3/
