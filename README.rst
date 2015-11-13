@@ -3,6 +3,7 @@ SQR-001: Git LFS Architecture Note
 ##################################
 
 .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.33711.svg
+   :target: http://dx.doi.org/10.5281/zenodo.33711
 
 This is a SQuaRE Technical Note describing the architecture of the `Git
 LFS <https://git-lfs.github.com/>`_ service implementation.
