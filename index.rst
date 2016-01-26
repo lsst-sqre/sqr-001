@@ -150,9 +150,13 @@ Documentation
   user-oriented notes can be found in afwdata's README. As this
   service is extended, it will be rehomed.
 
+- `LSST's developer guide<http://developer.lsst.io/en/latest/tools/git_lfs.html>`_
+
+  LSST's developer guide for using git-lfs.
+
 - `SQuaRE Technical Note 001 <https://github.com/lsst-sqre/technote-001>`_
 
-  The source for this note. 
+  The source for this note.
 
 RFCs
 ====
