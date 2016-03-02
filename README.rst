@@ -8,7 +8,7 @@ SQR-001: Git LFS Architecture Note
 This is a SQuaRE Technical Note describing the architecture of the `Git
 LFS <https://git-lfs.github.com/>`_ service implementation.
 
-Read this technical note at http://sqr-001.lsst.codes
+Read this technical note at http://sqr-001.lsst.io
 
 Build this Note
 ===============
