@@ -1,0 +1,21 @@
+sudo: false
+language: python
+matrix:
+  include:
+    - python: "3.5"
+      env: LTD_MASON_BUILD=true
+install:
+  - pip install -r requirements.txt
+  - pip install "ltd-mason>=0.2,<0.3"
+script:
+  - sphinx-build -b html -a -n -W -d _build/doctree . _build/html
+after_success:
+  - ltd-mason-travis --html-dir _build/html
+env:
+  global:
+    - LTD_MASON_BUILD=false  # disable builds in regular text matrix
+    - LTD_MASON_PRODUCT="sqr-001"
+    # travis encrypt "LTD_MASON_AWS_ID=... LTD_MASON_AWS_SECRET=..." --add env.global 
+    - secure: "uF0vc7bVySUkqbxx2u3kSHLjUz61EP3ds7c/cjMwSpSdfqheQRWi6nUjpo2/DN+abZw02NsdyiJneHvt/UHdxQiEsAcIKEnxNzzeZdKsaeNJFnIgDYWUwTuVjAH3fejhUiHTouEiwAvIgRmUb9r3wOhuze2EBi4enXxtxpBx6/uhwsCGujB2nBWJZy9jiMSHSdDXaT8LPaR/wZ5XwhpYlfa3IDBUVWdI/z7/3vk27HAE5Nfdl6pI0Ng31aqrZRZbzZKyGl3pyiu9+eo/OS/DhkAri1WXcFYZGuMDD2S0EwDSLiYB/fdywpFHxsOy7TYTiPDNflrIYiXqxXGf/J9PaCHbdX0TbnXSxq0g1m5pL8YLDo/VrLCL7r43+KlvAj38WoVWe5cKBjeUvvrR4MoDgR48r1TN9VeGzhyVcuCCJoYlk+St/QPY+EfclI8ZtpVQHDadSCEyacoDU6lnCIoOhSyM7AW8ZCDkqRi/kpK3mL6xI28DH5ZHwAFmPZkNkOd1E17fgWoysOKn+BtVYhKUStZZgPQs2CZRGh7R8UXkORzpZ6em5BaHIwWw7v/jhy0xD+HZr91ocmGh8x4Y15n4kuu0Q1mN84HgYdhXJKFIBW7HWUzN7tfT4H+8rf0qBX3RED6J4RffBPk3cCKNMZjK0bARJKp9unDmZfEz9qzG6So="
+    # travis encrypt "LTD_KEEPER_URL=... LTD_KEEPER_USER=... LTD_KEEPER_PASSWORD=..." --add env.global 
+    - secure: "Kuo7sIBFo+Ekqiab5SPFVgI73WRtSObw/ABrN9n7yZT9y7hRQb+SYkBFvtUWQwUVacE48abSn9ZutZR9aU1OHxFEke/UX+kuMHBfjtGxAGdSDIqdG4pM/QicnacvqiJElqcViFNTAr9f93m3IsDJNqkUFZYpmAv4yRwL96GmG5DC54TPfgG1ywd/V8mY9THZy3z9ts0viG3I5a6mO1GkD/8LxeZBjRkwybMA073J4L7W4snPU+ge+LK4lL1jhS+XyvDs9zrxO+3PKiULwfptrvZ0Ah+w7k8LNaNDvyGs5JD4jmahFh8XnYFPqtgquoAEhvIlOthttX7k45RH37vyyUyycjTCrgnJ672g0wI2Ph8rdEEBgZcbqeYpvyJuYtuMfXH0dIRtzSJX/jkZwWrxv9T8R2TE9jxRvgIejXSXLaoH4k9XAc45BqT3w0poUiWz2OgEyDqjR/KKmrxHC5cpTx+uaqRLc3sPTn0CvCtmZHCLcvedrug6a8D1eumg+KwGc1eW9Kv8O9oqauyYYikYXJiAXj6upJRAt+k9vNO+vwFDyCNMY450xuCTOB29MPsePKX/V5D0MkciMk0q8X5BaOfFpsyJC7FJ0AijeDfNo/9BUITrcInyDCrg3CrFk7fBGurWmzaXdNL3TZ9rQhYatriD+5RJuQwbFPykd3fkkMw="
