@@ -75,7 +75,7 @@ LFS-tracked data, they are in fact generating two requests. The first
 one goes to the Git server containing the Git LFS pointer for the
 file. It looks something like this:
 
-.. code-block::
+.. code-block:: text
 
    version https://git-lfs.github.com/spec/v1
    oid sha256:7a6943ac4d8337727b93f410cf51b1ce748dabe9dc8e85c8942c97dd5c0a49e9
@@ -150,7 +150,7 @@ Documentation
   user-oriented notes can be found in afwdata's README. As this
   service is extended, it will be rehomed.
 
-- `LSST's developer guide<http://developer.lsst.io/en/latest/tools/git_lfs.html>`_
+- `LSST's developer guide <http://developer.lsst.io/en/latest/tools/git_lfs.html>`_
 
   LSST's developer guide for using git-lfs.
 
