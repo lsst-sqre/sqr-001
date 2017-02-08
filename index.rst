@@ -14,7 +14,7 @@ and `git-fat`_, but in terms of workflow, storing files in those back
 ends was too much of a departure from what seems like "normal"
 workflow for users. Lacking a satisfactory option, the core package
 `afwdata`_ was left on the in-house gitolite server after the rest of the
-codebase migrated to GitHub. 
+codebase migrated to GitHub.
 
 .. _git-annex: http://www.git-annex.org
 .. _git-fat: https://github.com/jedbrown/git-fat
@@ -31,40 +31,14 @@ are self-censoring over what to store.
 
 Following `a successful RFC
 <https://jira.lsstcorp.org/browse/RFC-104>`_, we decided to proceed with
-a Git LFS service backed by our developer infrastructure `OpenStack`_
-resources at NCSA's Nebula cluster. This would give users the advantages
-of working predominantly with the GitHub services, while allowing us to
-offer unmetered storage at the back end. 
-
-.. _OpenStack: http://www.openstack.org
-
-Challenges
-==========
-
-There were a number of challenges to overcome.
-
-- As early Git LFS adopters, we encountered non-trivial bugs. Developer
-  response was excellent, but we did have to delay deployment waiting
-  for a fixed client for a better user experience.
-
-- At the time, the Nebula cluster did not provide an object store, so
-  we built our own with `Ceph`_.
-
-- There was also no disaster recovery backup service available, so we
-  built our own backed by `AWS S3`_ (we may move to `Glacier`_ if
-  volumes get high).
-
-- The Ceph S3 implementation lacked some features required by our
-  git-lfs server.
-
-.. _Ceph: http://ceph.com
-.. _AWS S3: https://aws.amazon.com/s3/
-.. _Glacier: https://aws.amazon.com/glacier/ 
+a Git LFS service. This would give users the advantages of working
+predominantly with the GitHub services, while allowing us to offer
+unmetered storage at the back end.
 
 Architecture
 ============
 
-.. image:: _static/gitlfs.png
+.. image:: _static/git-lfs.png
    :alt: GitLFS Architecture Diagram
 
 After `installing <https://git-lfs.github.com>`_ the ``git lfs`` client,
@@ -82,7 +56,7 @@ file. It looks something like this:
    size 123840
 
 The second request is made by the ``git lfs`` client (due to the
-smudge and clean filters) and uses the ``.gitconfig`` to locate
+smudge and clean filters) and uses the ``.lfsconfig`` to locate
 the Git LFS server it should be addressing. In our case that is
 ``git-lfs.lsst.codes``. The Git LFS server checks whether the requested
 blob exists in the backing store, and hands the client a URL that it
@@ -98,22 +72,11 @@ Other ``git-lfs.lsst.codes`` components:
   ``git-lfs-s3-server`` ruby gem,
 - `Nginx <http://nginx.org>`_ is used for SSL termination,
 - `Redis <http://redis.io>`_ is used for credential caching,
-- `s3s3 <https://github.com/lsst-sqre/s3s3>`_ is our backup service
-  backing onto AWS S3.
 
 The object store components are:
 
-- The ``s3.lsst.codes`` head node, that provides the `radosgw
-  <http://docs.ceph.com/docs/master/man/8/radosgw/>`_ REST API server
-  for Ceph.
-
-- Our Ceph instance (speaking the S3 protocol, can be switched to `Swift
-  <http://www.openstack.org/software/releases/kilo/components/swift>`_
-  when that is available) that uses a 3-node (the quorum required by
-  Ceph) configuration on ``ceph[0,1,2].lsst.codes``.
-
-All ``lsst.codes`` instances (in green in the diagram) are deployed on the
-Nebula cluster at NCSA.
+- The `AWS S3 service <https://aws.amazon.com/s3/>`_, that provides a
+  REST API to their object storage service.
 
 .. _repos:
 
@@ -126,26 +89,23 @@ These are the repos involved in this deployment:
 
   This is the server implementation. It also contains the deploy
   instructions. 
-
-- `s3s3 <https://github.com/lsst-sqre/s3s3>`_
-
-  This is the code for the backup service. 
   
 - `git-lfs-s3 <https://github.com/lsst-sqre/git-lfs-s3>`_
 
   This is a fork that we made of an LFS S3 implementation. We extended
-  it because at the time of writing it lacked support for Ceph and for
-  public repos (it only worked for private repos). We are working on
-  upstreaming those changes, and when this is done, the private fork
-  will be removed.
+  it because it lacked support for `the git-lfs batch API
+  <https://github.com/git-lfs/git-lfs/blob/master/docs/api/batch.md>`_.
 
 .. _docs:
 
 Documentation
 =============
 
-- `afwdata's README <https://github.com/lsst/afwdata>`_
+- `GitHub's Git Large File Storage website <https://git-lfs.github.com/>`_
 
+  This is GitHub's git-lfs website and links to the canonical client
+  source code, issues and documentation.
+  
   Because this was the first (and main) repo transitioned,
   user-oriented notes can be found in afwdata's README. As this
   service is extended, it will be rehomed.
