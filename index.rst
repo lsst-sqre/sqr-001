@@ -83,16 +83,17 @@ The object store components are:
 Client Requirements
 ===================
 
-The LSST Git LFS system requires a `minimum ``git-lfs`` client version
+The LSST Git LFS system requires a minimum ``git-lfs`` `client version
 of 1.1.0 <https://github.com/git-lfs/git-lfs/releases/tag/v1.1.0>`_.
 This is the minimum client version to support ``.lfsconfig``
 configuration.
 
-SQuaRE's continuous integration system uses ```git-lfs`` client version
-1.5.5 <https://github.com/git-lfs/git-lfs/releases/tag/v1.5.5>`_. This
-version supports both `the batch API <https://github.com/git-lfs/git-lfs/blob/master/docs/api/batch.md>`_ and `the legacy API <https://github.com/git-lfs/git-lfs/blob/f2678fc8304b1a570dd12489a388831dc01fae49/docs/api/http-v1-original.md>`_.
+SQuaRE's continuous integration system uses ``git-lfs`` `client version
+of 1.5.5 <https://github.com/git-lfs/git-lfs/releases/tag/v1.5.>`_. This
+version supports both `the batch API <https://github.com/git-lfs/git-lfs/blob/master/docs/api/batch.md>`_
+and `the legacy API <https://github.com/git-lfs/git-lfs/blob/f2678fc8304b1a570dd12489a388831dc01fae49/docs/api/http-v1-original.md>`_.
 
-It is recommended that users use the `current stable ``git-lfs`` client
+It is recommended that users use the `current stable ``git-lfs`` `client
 version <https://github.com/git-lfs/git-lfs/releases/latest>`_. Newer
 client versions support the more efficient batch API and have many bug
 fixes and performance improvements.
