@@ -1,4 +1,6 @@
 doc_id: 'SQR-001'
+series: 'SQR'
+serial_number: '001'
 doc_title: 'Git LFS Architecture Note'
 copyright: '2017, AURA/LSST'
 authors:
