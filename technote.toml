@@ -8,10 +8,26 @@ date_created = "2023-10-31T22:14:27Z"
 
 [[technote.authors]]
 name = { name = "Frossie Economou" }
-# orcid = "https://orcid.org/..."
-# affiliations = [
-#     { name = "Rubin Observatory", ror = "https://ror.org/048g3cy84" }
-# ]
+orcid = "https://orcid.org/0000-0002-8333-7615"
+affiliations = [
+    { name = "Rubin Observatory", ror = "https://ror.org/048g3cy84" }
+]
+
+[[technote.authors]]
+name = { name = "Adam Thornton" }
+orcid = "https://orcid.org/0000-0001-9342-6032"
+affiliations = [
+    { name = "Rubin Observatory", ror = "https://ror.org/048g3cy84" }
+]
+
+[[technote.authors]]
+name = { name = "Josh Hoblitt" }
+affiliations = [
+    { name = "Rubin Observatory", ror = "https://ror.org/048g3cy84" }
+]
+
+[[technote.authors]]
+name = { name = "J. Matt Peterson" }
 
 [technote.status]
 state = "draft"
