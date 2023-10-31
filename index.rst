@@ -33,7 +33,7 @@ workflow for users. Lacking a satisfactory option, the core package
 `afwdata`_ was left on the in-house gitolite server after the rest of the
 codebase migrated to GitHub.
 
-.. _git-annex: http://www.git-annex.org
+.. _git-annex: https://git-annex.branchable.com
 .. _git-fat: https://github.com/jedbrown/git-fat
 .. _afwdata: https://github.com/lsst/afwdata
 
@@ -63,9 +63,6 @@ now describes the current state of Git LFS at the Rubin Observatory.
 
 Architecture
 ============
-
-.. image:: _static/git-lfs.png
-   :alt: GitLFS Architecture Diagram
 
 After `installing <https://git-lfs.github.com>`_ the ``git lfs`` client,
 a user can commit additions and modifications to LFS-backed data using
@@ -125,16 +122,16 @@ Repositories
 
 These are the repos involved in this deployment:
 
-- `Phalanx <https://github.com/lsst-sqre/phalanx`_.
+- `Phalanx <https://github.com/lsst-sqre/phalanx>`_.
 
   The application
   configuration is held in ``applications/giftless``.
 
-- `Giftless <https://github.com/datopian/giftless>`_.
+- `Giftless repository <https://github.com/datopian/giftless>`_.
 
   This is the server implementation.  It uses Datopian's released
-  `giftless container <https://hub.docker.com/r/datopian/giftless>`_
-  
+  `Giftless container <https://hub.docker.com/r/datopian/giftless>`_
+
 
 .. _docs:
 
@@ -145,7 +142,7 @@ Documentation
 
   This is GitHub's git-lfs website and links to the canonical client
   source code, issues and documentation.
-  
+
   Because this was the first (and main) repo transitioned,
   user-oriented notes can be found in afwdata's README. As this
   service is extended, it will be rehomed.
@@ -174,6 +171,6 @@ See the `reStructuredText Style Guide <https://developer.lsst.io/restructuredtex
 .. Make in-text citations with: :cite:`bibkey`.
 .. Uncomment to use citations
 .. .. rubric:: References
-.. 
+..
 .. .. bibliography:: local.bib lsstbib/books.bib lsstbib/lsst.bib lsstbib/lsst-dm.bib lsstbib/refs.bib lsstbib/refs_ads.bib
 ..    :style: lsst_aa
