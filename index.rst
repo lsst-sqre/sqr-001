@@ -27,13 +27,22 @@ some upfront setup pain, the workflow was very close to "normal" GitHub
 flow. GitHub also released a paid hosted service for those files. Given
 the demand for storing data in our repositories, the cost would be
 non-trivial. More, we did not wish to get in a position where developers
-are self-censoring over what to store.
+are self-censoring over what to store.  Finally, the largest a Git LFS
+repository can be, if hosted at GitHub, is 5GB, no matter how much we'd
+be willing to pay.
 
 Following `a successful RFC
 <https://jira.lsstcorp.org/browse/RFC-104>`_, we decided to proceed with
 a Git LFS service. This would give users the advantages of working
 predominantly with the GitHub services, while allowing us to offer
 unmetered storage at the back end.
+
+In 2023, we were faced with the facts that we did not want to store our
+data at AWS anymore, and that the software we used for Git LFS was
+dangerously ancient and unmaintained. After some consideration, we chose
+a different product to provide Git LFS service, and proposed it in
+`RFC-966 <https://jira.lsstcorp.org/browse/RFC-966>`_.  This document
+now describes the current state of Git LFS at the Rubin Observatory.
 
 Architecture
 ============
@@ -44,7 +53,22 @@ Architecture
 After `installing <https://git-lfs.github.com>`_ the ``git lfs`` client,
 a user can commit additions and modifications to LFS-backed data using
 the normal ``git`` commands. The repo's ``.gitattributes`` specifies
-what files are tracked by Git LFS. When the user pushes commits with
+what files are tracked by Git LFS.
+
+Our Git LFS server is hosted by `Roundtable
+<https://roundtable.lsst.io>`_ and is protected by `Gafaelfawr
+<https://gafaelfawr.lsst.io>`_. Before the user can commit Git
+LFS-tracked data, they must first request a token with the
+``write:git-lfs`` scope.  Having done this, they must update their
+``~/.git-credentials`` file (or other Git credentials manager) with that
+token, and update the Git LFS URL to
+``https://git-lfs-rw.lsst.cloud/<org>/<repo>`` (where ``org`` is usually
+``lsst`` and ``repo`` is the repository name, e.g. ``testdata_subaru``).
+
+This process is described in the `Developer Guide
+<https://developer.lsst.io/git/git-lfs.html>`_.
+
+When the user pushes commits with
 LFS-tracked data, they are in fact generating two requests. The first
 one goes to the Git server containing the Git LFS pointer for the
 file. It looks something like this:
@@ -57,62 +81,43 @@ file. It looks something like this:
 
 The second request is made by the ``git lfs`` client (due to the
 smudge and clean filters) and uses the ``.lfsconfig`` to locate
-the Git LFS server it should be addressing. In our case that is
-``git-lfs.lsst.codes``. The Git LFS server checks whether the requested
+the Git LFS server it should be addressing. In our case that will be
+``git-lfs-rw.lsst.cloud``. The Git LFS server checks whether the requested
 blob exists in the backing store, and hands the client a URL that it
-can use to retrive or push it. If the request requires authentication
-and authorization then the Git LFS server queries the GitHub API to
-ensure the user is an `LSST org member <https://github.com/lsst>`_ (we
-can't let anyone on the open Internet push to our server!). The client
-then uses the URL to fetch or push to our object store.
+can use to retrive or push it. The client then uses the URL to fetch or push to our object store.
 
-Other ``git-lfs.lsst.codes`` components:
+Other ``git-lfs.lsst.cloud`` (and ``git-lfs-rw.lsst.cloud``) components:
 
-- `Passenger <https://www.phusionpassenger.com>`_ is used to run the
-  ``git-lfs-s3-server`` ruby gem,
-- `Nginx <http://nginx.org>`_ is used for SSL termination,
-- `Redis <http://redis.io>`_ is used for credential caching,
+- `Giftless <https://giftless.datopian.com>`_ provides the Git LFS
+  server.
 
-The object store components are:
-
-- The `AWS S3 service <https://aws.amazon.com/s3/>`_, that provides a
-  REST API to their object storage service.
+- `Google Cloud Storage <https://cloud.google.com/storage>`_ provides
+  the backing store, using the s3 object storage protocol.
 
 .. _repos:
 
 Client Requirements
 ===================
 
-The LSST Git LFS system requires a minimum ``git-lfs`` `client version
-of 1.1.0 <https://github.com/git-lfs/git-lfs/releases/tag/v1.1.0>`_.
-This is the minimum client version that supports ``.lfsconfig``
-configuration file.
-
-SQuaRE's continuous integration system uses ``git-lfs`` `client version
-of 1.5.5 <https://github.com/git-lfs/git-lfs/releases/tag/v1.5.>`_. This
-version supports both `the batch API <https://github.com/git-lfs/git-lfs/blob/master/docs/api/batch.md>`_
-and `the legacy API <https://github.com/git-lfs/git-lfs/blob/f2678fc8304b1a570dd12489a388831dc01fae49/docs/api/http-v1-original.md>`_.
-
 It is recommended that users use the current stable ``git-lfs`` `client
-version <https://github.com/git-lfs/git-lfs/releases/latest>`_. Newer
-client versions support the more efficient batch API and have many bug
-fixes and performance improvements.
+version <https://github.com/git-lfs/git-lfs/releases/latest>`_
+(``3.4.0`` at the time of writing).
 
 Repositories
 ============
 
 These are the repos involved in this deployment:
 
-- `git-lfs-s3-server <https://github.com/lsst-sqre/git-lfs-s3-server>`_
+- `Phalanx <https://github.com/lsst-sqre/phalanx`_.
 
-  This is the server implementation. It also contains the deploy
-  instructions. 
+  The application
+  configuration is held in ``applications/giftless``.
+
+- `Giftless <https://github.com/datopian/giftless>`_.
+
+  This is the server implementation.  It uses Datopian's released
+  `giftless container <https://hub.docker.com/r/datopian/giftless>`_
   
-- `git-lfs-s3 <https://github.com/lsst-sqre/git-lfs-s3>`_
-
-  This is a fork that we made of an LFS S3 implementation. We extended
-  it because it lacked support for `the git-lfs batch API
-  <https://github.com/git-lfs/git-lfs/blob/master/docs/api/batch.md>`_.
 
 .. _docs:
 
@@ -132,7 +137,7 @@ Documentation
 
   LSST's developer guide for using git-lfs.
 
-- `SQuaRE Technical Note 001 <https://github.com/lsst-sqre/technote-001>`_
+- `SQuaRE Technical Note 001 <https://github.com/lsst-sqre/sqr-001>`_
 
   The source for this note.
 
