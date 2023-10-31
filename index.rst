@@ -4,12 +4,6 @@
 
 .. Metadata such as the title, authors, and description are set in metadata.yaml
 
-.. TODO: Delete the note below before merging new content to the main branch.
-
-.. note::
-
-   **This technote is a work-in-progress.**
-
 Abstract
 ========
 
@@ -142,10 +136,6 @@ Documentation
 
   This is GitHub's git-lfs website and links to the canonical client
   source code, issues and documentation.
-
-  Because this was the first (and main) repo transitioned,
-  user-oriented notes can be found in afwdata's README. As this
-  service is extended, it will be rehomed.
 
 - `LSST's developer guide <http://developer.lsst.io/en/latest/tools/git_lfs.html>`_
 
