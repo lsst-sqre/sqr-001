@@ -28,6 +28,3 @@ affiliations = [
 
 [[technote.authors]]
 name = { name = "J. Matt Peterson" }
-
-[technote.status]
-state = "draft"
