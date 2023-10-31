@@ -1,3 +1,20 @@
+:tocdepth: 1
+
+.. sectnum::
+
+.. Metadata such as the title, authors, and description are set in metadata.yaml
+
+.. TODO: Delete the note below before merging new content to the main branch.
+
+.. note::
+
+   **This technote is a work-in-progress.**
+
+Abstract
+========
+
+A description of the architecture of the Git LFS service implementation
+
 This is a SQuaRE Technical Note describing the architecture of the `Git LFS <https://git-lfs.github.com/>`_ service implementation. For actual
 documentation on deployment, as well as the source code involved in
 standing up this service, consult the :ref:`repositories <repos>`.
@@ -147,3 +164,16 @@ RFCs
 - `RFC-104 <https://jira.lsstcorp.org/browse/RFC-104>`_
 
   This is the RFC proposing Git LFS adoption.
+
+- `RFC-966 <https://jira.lsstcorp.org/browse/RFC-966>`_
+
+  This is the RFC updating the Git LFS architecture with Giftless (2023).
+
+See the `reStructuredText Style Guide <https://developer.lsst.io/restructuredtext/style.html>`__ to learn how to create sections, links, images, tables, equations, and more.
+
+.. Make in-text citations with: :cite:`bibkey`.
+.. Uncomment to use citations
+.. .. rubric:: References
+.. 
+.. .. bibliography:: local.bib lsstbib/books.bib lsstbib/lsst.bib lsstbib/lsst-dm.bib lsstbib/refs.bib lsstbib/refs_ads.bib
+..    :style: lsst_aa
